@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
-import { MenuItem } from "./type";
+import { MenuItem } from "../type";
+import { useCartStore } from "@/store/cart.store";
 
-const MenuCard = ({ item: { image_url, name, price } }: { item: MenuItem }) => {
+const MenuCard = ({
+  item: { image_url, name, price, $id },
+}: {
+  item: MenuItem;
+}) => {
   // const [imageError, setImageError] = useState(false);
 
   // The image_url from Appwrite storage is already a complete URL
   const imageUrl = image_url;
+  const {addItem} = useCartStore();
 
   return (
     <TouchableOpacity
@@ -41,11 +47,11 @@ const MenuCard = ({ item: { image_url, name, price } }: { item: MenuItem }) => {
         // }}
       />
 
-      {imageError && (
+      {/* {imageError && (
         <View className="size-32 absolute -top-10 bg-gray-200 items-center justify-center">
           <Text className="text-xs text-gray-400">No Image</Text>
         </View>
-      )}
+      )} */}
       <Text
         className="text-center base-bold text-dark-100 mb-2"
         numberOfLines={1}
@@ -53,7 +59,7 @@ const MenuCard = ({ item: { image_url, name, price } }: { item: MenuItem }) => {
         {name}
       </Text>
       <Text className="body-regular text-gray-200 mb-4">For ${price}</Text>
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity onPress={() => addItem({ id:$id, name, price, image_url:imageUrl, customizations: [] })}>
         <Text className="paragraph-bold text-primary">Add to Cart +</Text>
       </TouchableOpacity>
     </TouchableOpacity>

@@ -2,7 +2,7 @@ import cn from "clsx";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { FlatList, Platform, Text, TouchableOpacity } from "react-native";
-import { Category } from "./type";
+import { Category } from "../type";
 
 const Filter = ({ categories }: { categories: Category[] }) => {
   const searchParams = useLocalSearchParams();

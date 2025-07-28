@@ -1,5 +1,5 @@
-import { User } from "@/components/type";
 import { getCurrentUser } from "@/lib/appwrite";
+import { User } from "@/type";
 import { create } from "zustand";
 
 type AuthState = {
