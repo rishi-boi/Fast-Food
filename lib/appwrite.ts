@@ -1,4 +1,8 @@
-import { CreateUserParams, SignInParams } from "@/components/type";
+import {
+  CreateUserParams,
+  GetMenuParams,
+  SignInParams,
+} from "@/components/type";
 import {
   Account,
   Avatars,
@@ -6,16 +10,22 @@ import {
   Databases,
   ID,
   Query,
+  Storage,
 } from "react-native-appwrite";
 
 export const appwriteConfig = {
   endPoint:
     process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT ||
     "https://appwrite.example.com/v1",
-  platform: "com.rishi.foodordering",
+  platform: "com.rishi.foodordering", // Try more generic platform for development
   databaseId: "6884836400001dcd68f5",
+  bucketId: "68850368000c34cb579f",
   projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID || "default",
   userCollectionId: "688483880006df711fcc",
+  categoriesCollectionId: "6884dce60031467f3c2e",
+  menuCollectionId: "6884dfa700032276dcc9",
+  customizationsCollectionId: "6884e0af0019e2cf762d",
+  menuCustomizationsCollectionId: "6884e1900037723cb3fc",
 };
 
 export const client = new Client();
@@ -28,6 +38,8 @@ client
 export const account = new Account(client);
 
 export const databases = new Databases(client);
+
+export const storage = new Storage(client);
 
 const avatars = new Avatars(client);
 
@@ -79,3 +91,40 @@ export const getCurrentUser = async () => {
     throw new Error(error as string);
   }
 };
+
+export const getMenu = async ({ category, query }: GetMenuParams) => {
+  try {
+    const queries = [];
+
+    if (category) {
+      queries.push(Query.equal("categories", category));
+    }
+    if (query) {
+      queries.push(Query.search("name", query));
+    }
+
+    const menus = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.menuCollectionId,
+      queries
+    );
+
+    return menus.documents;
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};
+
+export const getCategories = async() => {
+  try {
+    const categories = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.categoriesCollectionId
+    );
+
+    return categories.documents;
+  } catch (error) {
+    throw new Error(error as string);
+    
+  }
+}
